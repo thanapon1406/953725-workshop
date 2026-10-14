@@ -1,0 +1,31 @@
+# Every schema change is a versioned file under changes/, applied in the order listed here.
+# Never edit a changeset that has already run — add a new one, and add its file to this list.
+databaseChangeLog:
+  - include:
+      file: changes/001-districts.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/002-users.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/003-parties-candidates.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/004-election-votes.sql
+      relativeToChangelogFile: true
+
+  # Marker: the Day 1 schema is complete. `update-to-tag --tag=day1` stops here,
+  # before any seed data.
+  - changeSet:
+      id: tag-day1
+      author: election
+      changes:
+        - tagDatabase:
+            tag: day1
+
+  - include:
+      file: changes/900-dev-seed.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/901-e2e-seed.sql
+      relativeToChangelogFile: true
