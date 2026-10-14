@@ -1,0 +1,48 @@
+{
+  "name": "election-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reference election backend for the CMU CAMT automated testing workshop",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "db:up": "docker compose up -d --wait db",
+    "db:migrate": "docker compose run --rm --build -e LIQUIBASE_COMMAND_URL=jdbc:postgresql://db:5432/election_dev -e LIQUIBASE_COMMAND_CONTEXTS=dev liquibase update",
+    "db:up:test": "docker compose up -d --wait db-test",
+    "db:migrate:test": "docker compose run --rm --build liquibase update",
+    "db:reset:test": "docker compose up -d --force-recreate --wait db-test",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "jest --selectProjects unit",
+    "test:integration": "npm run db:up:test && npm run db:migrate:test && jest --selectProjects integration --runInBand",
+    "db:up:e2e": "docker compose up -d --force-recreate --wait db-e2e",
+    "db:migrate:e2e": "docker compose run --rm --build -e LIQUIBASE_COMMAND_URL=jdbc:postgresql://db-e2e:5432/election_e2e -e LIQUIBASE_COMMAND_CONTEXTS=e2e liquibase update",
+    "test:e2e": "npm run db:up:e2e && npm run db:migrate:e2e && docker compose up -d --build --force-recreate --wait app && playwright test",
+    "db:down": "docker compose --profile '*' down",
+    "doctor": "node scripts/doctor.mjs"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "@playwright/test": "^1.63.0",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.19.0",
+    "@types/pg": "^8.23.1",
+    "@types/supertest": "^7.2.1",
+    "jest": "^30.5.2",
+    "supertest": "^7.3.0",
+    "ts-jest": "^29.4.14",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3"
+  }
+}
