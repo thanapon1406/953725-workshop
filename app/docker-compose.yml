@@ -1,0 +1,89 @@
+name: election
+
+services:
+  # Database for local development (data kept in a volume).
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: election
+      POSTGRES_PASSWORD: election
+      POSTGRES_DB: election_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U election -d election_dev"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # Throwaway database for automated tests (tmpfs = wiped on every restart).
+  db-test:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: election
+      POSTGRES_PASSWORD: election
+      POSTGRES_DB: election_test
+    ports:
+      - "5433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U election -d election_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # Database behind the app container for end-to-end tests. Recreated on every
+  # `npm run test:e2e`, so it never shares state with the integration tests.
+  db-e2e:
+    image: postgres:17-alpine
+    profiles: ["e2e"]
+    environment:
+      POSTGRES_USER: election
+      POSTGRES_PASSWORD: election
+      POSTGRES_DB: election_e2e
+    ports:
+      - "5434:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U election -d election_e2e"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # Schema migrations. Defaults target db-test; npm scripts override for dev and e2e.
+  liquibase:
+    build: ./db
+    profiles: ["tools"]
+    environment:
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://db-test:5432/election_test
+      LIQUIBASE_COMMAND_USERNAME: election
+      LIQUIBASE_COMMAND_PASSWORD: election
+      LIQUIBASE_COMMAND_CHANGELOG_FILE: db.changelog-master.yaml
+      LIQUIBASE_COMMAND_CONTEXTS: test
+      LIQUIBASE_SHOW_BANNER: "false"
+
+  # The whole app as a black box, for Playwright end-to-end tests.
+  app:
+    build: .
+    profiles: ["e2e"]
+    environment:
+      DATABASE_URL: postgres://election:election@db-e2e:5432/election_e2e
+      JWT_SECRET: e2e-secret
+      PORT: "3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      db-e2e:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  db-data:
