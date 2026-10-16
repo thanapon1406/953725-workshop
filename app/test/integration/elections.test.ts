@@ -1,6 +1,8 @@
 // Lab 04 — component tests: the whole app in-process + real Postgres.
 // Build data with builders (test/support/builders.ts), insert it through a helper,
 // and truncate before each test. See labs/04-test-data/README.md
+import { describe, it } from 'vitest';
+
 describe('election management (component)', () => {
   describe('POST /parties', () => {
     it.todo('lets a commissioner create a party');
