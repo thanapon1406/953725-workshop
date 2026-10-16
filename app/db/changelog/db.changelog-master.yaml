@@ -13,6 +13,9 @@ databaseChangeLog:
   - include:
       file: changes/004-election-votes.sql
       relativeToChangelogFile: true
+  - include:
+      file: changes/005-practice.sql
+      relativeToChangelogFile: true
 
   # Marker: the Day 1 schema is complete. `update-to-tag --tag=day1` stops here,
   # before any seed data.
