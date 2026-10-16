@@ -1,19 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { toPublicUser } from '../../src/services/accountService';
+import { USER_ME } from '../support/fixtures';
 
 describe('toPublicUser', () => {
   it('drops the password hash and keeps everything else', () => {
-    const user = {
-      id: 7,
-      nationalId: '1509900000017',
-      passwordHash: 'scrypt$salt$hash',
-      firstName: 'ฐนพล',
-      lastName: 'สารสมุทร',
-      address: 'CAMT',
-      districtId: 'CM-1',
-      role: 'VOTER' as const,
-    };
-
+    const user = USER_ME();
     const expected = { ...user } as Partial<typeof user>;
     delete expected.passwordHash;
 
