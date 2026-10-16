@@ -51,9 +51,9 @@ export class UserBuilder {
   }
 }
 
-export const aVoter = () => new UserBuilder('VOTER');
-export const aCommissioner = () => new UserBuilder('COMMISSIONER');
-export const anAdmin = () => new UserBuilder('ADMIN');
+export const VOTER = () => new UserBuilder('VOTER');
+export const COMMISSIONER = () => new UserBuilder('COMMISSIONER');
+export const ADMIN = () => new UserBuilder('ADMIN');
 
 export class PartyBuilder {
   private spec: NewParty = {
@@ -72,7 +72,7 @@ export class PartyBuilder {
   }
 }
 
-export const aParty = () => new PartyBuilder();
+export const PARTY = () => new PartyBuilder();
 
 export class CandidateBuilder {
   private spec: Omit<NewCandidate, 'partyId'> & { partyId?: number } = {
@@ -99,9 +99,9 @@ export class CandidateBuilder {
   }
 
   build(): NewCandidate {
-    if (this.spec.partyId === undefined) throw new Error('aCandidate() needs .forParty(partyId)');
+    if (this.spec.partyId === undefined) throw new Error('CANDIDATE() needs .forParty(partyId)');
     return { ...this.spec, partyId: this.spec.partyId };
   }
 }
 
-export const aCandidate = () => new CandidateBuilder();
+export const CANDIDATE = () => new CandidateBuilder();

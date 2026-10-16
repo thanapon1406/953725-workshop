@@ -6,7 +6,7 @@ import request from 'supertest';
 import { Pool } from 'pg';
 import { createApp, pgDeps } from '../../src/app';
 import { JwtTokenService } from '../../src/auth/tokenService';
-import { aCandidate, aCommissioner, aParty, anAdmin, aVoter } from '../support/builders';
+import { CANDIDATE, COMMISSIONER, PARTY, ADMIN, VOTER } from '../support/builders';
 import { CM1_DISTRICT, CM2_DISTRICT } from '../support/fixtures';
 import { authHeaderFor, givenFor } from './support/given';
 import { createTestPool, truncateAll } from './support/database';
@@ -34,7 +34,7 @@ describe('election management (component)', () => {
 
   describe('POST /parties', () => {
     it('lets a commissioner create a party', async () => {
-      const commissioner = await given.user(aCommissioner());
+      const commissioner = await given.user(COMMISSIONER());
 
       const response = await request(app)
         .post('/parties')
@@ -46,7 +46,7 @@ describe('election management (component)', () => {
     });
 
     it('forbids a voter (403)', async () => {
-      const voter = await given.user(aVoter().inDistrict(CM2_DISTRICT.id));
+      const voter = await given.user(VOTER().inDistrict(CM2_DISTRICT.id));
 
       const response = await request(app)
         .post('/parties')
@@ -65,8 +65,8 @@ describe('election management (component)', () => {
     });
 
     it('rejects a duplicate party name (409)', async () => {
-      const commissioner = await given.user(aCommissioner());
-      await given.party(aParty().named('พรรคแสงดาว'));
+      const commissioner = await given.user(COMMISSIONER());
+      await given.party(PARTY().named('พรรคแสงดาว'));
 
       const response = await request(app)
         .post('/parties')
@@ -79,7 +79,7 @@ describe('election management (component)', () => {
 
   describe('POST /districts/:id/candidates', () => {
     it('adds a candidate that then appears in the public results of that district', async () => {
-      const commissioner = await given.user(aCommissioner());
+      const commissioner = await given.user(COMMISSIONER());
       const party = await given.party();
 
       const created = await request(app)
@@ -99,8 +99,8 @@ describe('election management (component)', () => {
 
   describe('PATCH /admin/users/:id/role', () => {
     it('lets an admin promote a voter to commissioner', async () => {
-      const admin = await given.user(anAdmin());
-      const voter = await given.user(aVoter().inDistrict(CM2_DISTRICT.id));
+      const admin = await given.user(ADMIN());
+      const voter = await given.user(VOTER().inDistrict(CM2_DISTRICT.id));
 
       const response = await request(app)
         .patch(`/admin/users/${voter.id}/role`)
@@ -114,12 +114,12 @@ describe('election management (component)', () => {
 
   describe('GET /me/candidates', () => {
     it('shows a voter only the candidates of their own district', async () => {
-      const voter = await given.user(aVoter().inDistrict(CM1_DISTRICT.id));
+      const voter = await given.user(VOTER().inDistrict(CM1_DISTRICT.id));
       const starParty = await given.party();
       const moonParty = await given.party();
-      await given.candidate(aCandidate().inDistrict(CM1_DISTRICT.id).forParty(starParty.id).numbered(1));
-      await given.candidate(aCandidate().inDistrict(CM1_DISTRICT.id).forParty(moonParty.id).numbered(2));
-      await given.candidate(aCandidate().inDistrict(CM2_DISTRICT.id).forParty(starParty.id).numbered(1));
+      await given.candidate(CANDIDATE().inDistrict(CM1_DISTRICT.id).forParty(starParty.id).numbered(1));
+      await given.candidate(CANDIDATE().inDistrict(CM1_DISTRICT.id).forParty(moonParty.id).numbered(2));
+      await given.candidate(CANDIDATE().inDistrict(CM2_DISTRICT.id).forParty(starParty.id).numbered(1));
 
       const response = await request(app).get('/me/candidates').set(authHeaderFor(tokens, voter));
 

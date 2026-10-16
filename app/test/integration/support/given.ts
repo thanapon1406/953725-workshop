@@ -6,7 +6,7 @@ import { Candidate, Party, User } from '../../../src/domain/types';
 import { PgCandidateRepository } from '../../../src/repositories/candidateRepository';
 import { PgPartyRepository } from '../../../src/repositories/partyRepository';
 import { PgUserRepository } from '../../../src/repositories/userRepository';
-import { aParty, aVoter, CandidateBuilder, PartyBuilder, UserBuilder } from '../../support/builders';
+import { CandidateBuilder, PartyBuilder, UserBuilder, PARTY, VOTER } from '../../support/builders';
 
 export function givenFor(pool: Pool) {
   const users = new PgUserRepository(pool);
@@ -14,7 +14,7 @@ export function givenFor(pool: Pool) {
   const candidates = new PgCandidateRepository(pool);
 
   return {
-    async user(builder: UserBuilder = aVoter()): Promise<User> {
+    async user(builder: UserBuilder = VOTER()): Promise<User> {
       // The users table has no role column in NewUser — create() always makes a VOTER,
       // so any other role is a second step, like the service would do it.
       const { role, ...newUser } = builder.build();
@@ -22,7 +22,7 @@ export function givenFor(pool: Pool) {
       return role === 'VOTER' ? created : (await users.updateRole(created.id, role))!;
     },
 
-    async party(builder: PartyBuilder = aParty()): Promise<Party> {
+    async party(builder: PartyBuilder = PARTY()): Promise<Party> {
       return parties.create(builder.build());
     },
 
