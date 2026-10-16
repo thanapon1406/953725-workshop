@@ -41,7 +41,7 @@ npm run test:e2e           # build app เป็น container แล้วยิ
 ## 4. อ่าน repo (15 นาที)
 
 - `app/README.md` — คำสั่ง, API, โครงสร้าง
-- `app/jest.config.js` — ทำไมแยก `unit` กับ `integration` เป็น 2 projects?
+- `app/jest.config.js` — ทำไมแยก `unit` กับ `integration` เป็น 2 projects? (หลัง Lab 02 unit ย้ายไป `app/vitest.config.mts` แล้ว)
 - `app/src/app.ts` — `createApp(deps)` รับ dependency อะไรบ้าง? ทำไมถึงออกแบบแบบนี้?
 - `app/src/routes/voteRoutes.ts` — เทียบกับ route อื่น เห็นอะไรต่างไปบ้าง? (เก็บไว้ใช้ Day 2)
 

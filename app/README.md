@@ -12,7 +12,7 @@ Express + TypeScript + Postgres, schema versioned with Liquibase.
 | `npm run db:up` / `db:migrate` | Dev Postgres (port 5432) + migrations **with** dev seed data |
 | `npm run db:up:test` / `db:migrate:test` | Test Postgres (port 5433, tmpfs) + migrations **without** seed data |
 | `npm run db:reset:test` | Recreate the test database from scratch |
-| `npm run test:unit` | Jest `unit` project — no I/O, parallel |
+| `npm run test:unit` | Vitest `unit` project — no I/O, parallel |
 | `npm run test:integration` | Starts db-test, runs Liquibase, then Jest `integration` project in band |
 | `npm run db:up:e2e` / `db:migrate:e2e` | Fresh e2e Postgres (port 5434, recreated every run) + migrations with bootstrap accounts |
 | `npm run test:e2e` | Fresh db-e2e + Liquibase + app container, then Playwright API tests |
@@ -23,7 +23,7 @@ Express + TypeScript + Postgres, schema versioned with Liquibase.
 
 | Boundary | Where | Tool | Talks to |
 |---|---|---|---|
-| Unit | `test/unit/` | Jest | Nothing outside the process — collaborators are test doubles |
+| Unit | `test/unit/` | Vitest | Nothing outside the process — collaborators are test doubles |
 | Component | `test/integration/` | Jest + supertest | The app in-process + real Postgres (`db-test`) |
 | End-to-end | `e2e/` | Playwright (`request`) | The app container over HTTP, as a black box |
 

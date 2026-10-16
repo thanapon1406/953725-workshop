@@ -1,5 +1,5 @@
-// Two projects = two test boundaries, visible right in the config.
-//   unit        — no I/O, runs in parallel     (npm run test:unit)
+// The `unit` project moved to Vitest (app/vitest.config.mts) in Lab 02.
+// Jest now runs only the integration boundary.
 //   integration — real Postgres, runs in band  (npm run test:integration)
 //
 // ts-jest type-checks every test file (a type error fails the test run).
@@ -11,12 +11,6 @@ const tsJest = {
 /** @type {import('jest').Config} */
 module.exports = {
   projects: [
-    {
-      displayName: 'unit',
-      testEnvironment: 'node',
-      transform: tsJest,
-      testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
-    },
     {
       displayName: 'integration',
       testEnvironment: 'node',

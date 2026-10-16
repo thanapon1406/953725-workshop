@@ -20,7 +20,8 @@ Workshop: **Software Testing in Real Industry** — hands-on automated testing w
 | **VS Code** | ล่าสุด | https://code.visualstudio.com |
 
 VS Code extensions ที่แนะนำ:
-- **Jest** (`Orta.vscode-jest`) — รัน/ดีบัก test ทีละตัวจาก editor
+- **Vitest** (`vitest.explorer`) — รัน/ดีบัก unit test ทีละตัวจาก editor
+- **Jest** (`Orta.vscode-jest`) — integration test ยังใช้ Jest
 - **Playwright Test for VS Code** (`ms-playwright.playwright`)
 
 ### หมายเหตุตามระบบปฏิบัติการ
@@ -42,13 +43,13 @@ docker compose version   # ต้องเป็น v2 ขึ้นไป (ค�
 ## 2. Clone repo และรัน doctor
 
 ```bash
-git clone https://github.com/boyone/camt-software-testing.git testing-workshop
+git clone https://github.com/thanapon1406/953725-workshop.git testing-workshop
 cd testing-workshop/app
 npm ci
 npm run doctor
 ```
 
-`npm run doctor` จะตรวจเครื่องมือ → เปิด Postgres สำหรับ test → รัน Liquibase migrations → รัน unit test และ integration test อย่างละ 1 ตัว
+`npm run doctor` จะตรวจเครื่องมือ → เปิด Postgres สำหรับ test → รัน Liquibase migrations → รัน unit test (Vitest) และ integration test (Jest) เพื่อดูว่าเขียว
 
 ผลที่ต้องการ:
 
