@@ -61,7 +61,7 @@ if (dockerUp) {
   check('Start test database', step('npm run db:up:test'), 'Is port 5433 already used? Stop the other Postgres and retry');
   check('Liquibase migrations', step('npm run db:migrate:test'), 'First run downloads images — check your internet connection');
   check('Unit test', step('npm run test:unit'));
-  check('Integration test', step('npx jest --selectProjects integration --runInBand'));
+  check('Integration test', step('npx vitest run --project integration'));
 }
 
 const failed = results.filter((r) => !r.ok);
