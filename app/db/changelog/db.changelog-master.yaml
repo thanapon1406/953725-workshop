@@ -32,3 +32,7 @@ databaseChangeLog:
   - include:
       file: changes/901-e2e-seed.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: changes/902-seed-commissioners.sql
+      relativeToChangelogFile: true
