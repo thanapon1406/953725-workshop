@@ -1,3 +1,4 @@
+import { Principal } from '../../src/auth/tokenService';
 import { District, User } from '../../src/domain/types';
 import { NewParty } from '../../src/repositories/partyRepository';
 import { Registration } from '../../src/services/accountService';
@@ -41,6 +42,11 @@ export function USER_TOON(overrides: Partial<Registration> = {}): Registration {
     districtId: CM1_DISTRICT.id,
     ...overrides,
   };
+}
+
+/** Who is calling — the identity that a token carries. */
+export function PRINCIPAL(overrides: Partial<Principal> = {}): Principal {
+  return { userId: 7, role: 'VOTER', districtId: CM1_DISTRICT.id, ...overrides };
 }
 
 /** A party as the commission submits one (no id yet — the repository assigns it). */
